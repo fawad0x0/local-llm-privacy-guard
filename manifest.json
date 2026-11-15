@@ -1,0 +1,92 @@
+{
+  "manifest_version": 3,
+  "name": "Local LLM Privacy Guard",
+  "version": "0.2.0",
+  "description": "Scans prompts, pastes and uploads locally for secrets, .env files, configs, logs and personal data before they reach AI chats.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": ["storage", "scripting", "activeTab"],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://claude.ai/*",
+    "https://gemini.google.com/*",
+    "https://copilot.microsoft.com/*",
+    "https://www.perplexity.ai/*",
+    "https://perplexity.ai/*",
+    "https://chat.deepseek.com/*",
+    "https://chat.mistral.ai/*",
+    "https://grok.com/*",
+    "https://poe.com/*",
+    "https://www.meta.ai/*"
+  ],
+  "optional_host_permissions": ["*://*/*", "http://localhost/*", "http://127.0.0.1/*"],
+  "background": {
+    "service_worker": "background.js",
+    "scripts": ["src/settings.js", "background.js"]
+  },
+  "action": {
+    "default_title": "Local LLM Privacy Guard",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "storage": {
+    "managed_schema": "managed_schema.json"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*",
+        "https://gemini.google.com/*",
+        "https://copilot.microsoft.com/*",
+        "https://www.perplexity.ai/*",
+        "https://perplexity.ai/*",
+        "https://chat.deepseek.com/*",
+        "https://chat.mistral.ai/*",
+        "https://grok.com/*",
+        "https://poe.com/*",
+        "https://www.meta.ai/*"
+      ],
+      "js": [
+        "src/settings.js",
+        "src/engine/validators.js",
+        "src/rules/pii.js",
+        "src/rules/credentials.js",
+        "src/rules/config.js",
+        "src/rules/env.js",
+        "src/rules/logs.js",
+        "src/rules/network.js",
+        "src/engine/classify.js",
+        "src/engine/tokens.js",
+        "src/engine/scan.js",
+        "src/engine/files.js",
+        "src/adapters/base.js",
+        "src/adapters/sites.js",
+        "src/ui/panel.js",
+        "src/content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "local-llm-privacy-guard@privacy-guard.extension",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": { "required": ["none"] }
+    }
+  }
+}

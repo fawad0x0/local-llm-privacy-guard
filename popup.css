@@ -1,0 +1,147 @@
+:root {
+  --bg: #f7f8fa;
+  --card: #ffffff;
+  --fg: #17202a;
+  --muted: #5f6b76;
+  --line: #dfe4ea;
+  --accent: #176b55;
+  --accent-soft: #e8f3ef;
+  --accent-fg: #174b3c;
+  --warn: #b42318;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14181d;
+    --card: #1b2026;
+    --fg: #e6ebf0;
+    --muted: #a3adb8;
+    --line: #36404a;
+    --accent: #3fb38f;
+    --accent-soft: #17302a;
+    --accent-fg: #b9ecd9;
+    --warn: #ff6b5e;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  width: 330px;
+  background: var(--bg);
+  color: var(--fg);
+  font:
+    14px/1.45 system-ui,
+    sans-serif;
+}
+main {
+  padding: 14px 16px 16px;
+}
+header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+h1 {
+  margin: 0;
+  font-size: 17px;
+}
+.sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.site {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+}
+.site-name {
+  font-weight: 600;
+  word-break: break-all;
+}
+.site .toggle {
+  border-top: 0;
+  padding: 6px 0 0;
+}
+.hint {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.hint:empty {
+  display: none;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+  cursor: pointer;
+}
+input {
+  accent-color: var(--accent);
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 8px 0;
+}
+.stats div {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px;
+  text-align: center;
+}
+.stats strong {
+  display: block;
+  font-size: 17px;
+}
+.stats span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.status {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent-fg);
+  font-size: 12.5px;
+}
+.status.error {
+  color: var(--warn);
+}
+.row {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+button {
+  font: inherit;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--fg);
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+button:hover {
+  border-color: var(--accent);
+}
+.note {
+  color: var(--muted);
+  font-size: 11.5px;
+  margin: 10px 0 0;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

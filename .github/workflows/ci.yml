@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Lint
+        run: npm run lint
+      - name: Unit tests, fixture gate, performance and ReDoS guards
+        run: npm test
+      - name: Firefox add-on lint
+        run: npm run lint:firefox
+      - name: Install Chromium for end-to-end tests
+        run: npx playwright install --with-deps chromium
+      - name: End-to-end tests (extension loaded in Chromium)
+        run: npm run test:e2e
+      - name: Package
+        run: npm run zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: dist/*.zip

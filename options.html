@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Guard Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <header class="top">
+        <img src="icons/icon-48.png" alt="" width="36" height="36" />
+        <div>
+          <h1>Privacy Guard settings</h1>
+          <p class="sub">Everything is scanned on this device. No prompt text is stored or sent anywhere.</p>
+        </div>
+      </header>
+      <div class="managed" id="managed" hidden>
+        Some settings are managed by your organization and cannot be changed here.
+      </div>
+
+      <section class="card">
+        <h2>General</h2>
+        <label class="toggle"><input type="checkbox" data-key="enabled" /> Protection enabled</label>
+        <label class="toggle"
+          ><input type="checkbox" data-key="reviewAll" /> Review every prompt, even when nothing is found</label
+        >
+        <label class="toggle"
+          ><input type="checkbox" data-key="strictMode" /> Strict mode: block sending when the message box or a file
+          cannot be inspected</label
+        >
+        <label class="toggle"
+          ><input type="checkbox" data-key="scanPaste" /> Scan pasted and dropped text immediately</label
+        >
+        <label class="toggle"
+          ><input type="checkbox" data-key="scanFiles" /> Scan uploaded, pasted and dropped files</label
+        >
+        <label class="toggle"
+          ><input type="checkbox" data-key="showBadge" /> Show the small "Privacy Guard" badge on protected sites</label
+        >
+      </section>
+
+      <section class="card">
+        <h2>What happens per severity</h2>
+        <p class="help">
+          <b>Block</b> needs redaction or a typed override. <b>Review</b> shows the review panel. <b>Note</b> sends and
+          shows a short notice. <b>Off</b> ignores it.
+        </p>
+        <div class="grid4" id="policy"></div>
+      </section>
+
+      <section class="card">
+        <h2>Detection categories</h2>
+        <div class="grid2" id="categories"></div>
+        <h3>Country identifier packs</h3>
+        <div class="grid2" id="packs"></div>
+      </section>
+
+      <section class="card">
+        <h2>Your own rules</h2>
+        <label class="lbl" for="customRules"
+          >Custom regex rules, one per line: <code>LABEL | severity | pattern</code></label
+        >
+        <textarea
+          id="customRules"
+          rows="4"
+          spellcheck="false"
+          placeholder="EMPLOYEE_ID | high | \bEMP-\d{6}\b"
+        ></textarea>
+        <div class="error" id="customRulesError" role="alert"></div>
+        <label class="lbl" for="dictionary">Confidential terms (client names, project codenames), one per line</label>
+        <textarea id="dictionary" rows="3" spellcheck="false" placeholder="Project Falcon&#10;Contoso Bank"></textarea>
+        <label class="lbl" for="internalDomains">Internal domains, one per line. Subdomains are included.</label>
+        <textarea
+          id="internalDomains"
+          rows="2"
+          spellcheck="false"
+          placeholder="mycompany.com&#10;corp.mycompany.net"
+        ></textarea>
+        <label class="lbl" for="allowlist">Allowlist: exact values that are never flagged, one per line</label>
+        <textarea id="allowlist" rows="2" spellcheck="false" placeholder="support@mycompany.com"></textarea>
+      </section>
+
+      <section class="card">
+        <h2>Sites</h2>
+        <p class="help">
+          Built-in support: ChatGPT, Claude, Gemini, Microsoft Copilot, Perplexity, DeepSeek, Mistral Le Chat, Grok, Poe
+          and Meta AI.
+        </p>
+        <label class="lbl" for="disabledSites">Hostnames where protection is turned off, one per line</label>
+        <textarea id="disabledSites" rows="2" spellcheck="false" placeholder="poe.com"></textarea>
+        <label class="lbl" for="newSite">Protect another site (uses generic detection)</label>
+        <div class="inline">
+          <input id="newSite" type="text" placeholder="chat.example-ai.com" autocomplete="off" />
+          <button id="addSite" type="button">Add site</button>
+        </div>
+        <ul class="sites" id="customSites"></ul>
+      </section>
+
+      <section class="card">
+        <h2>Local AI check (optional)</h2>
+        <p class="help">
+          Uses a model running on your own computer (Ollama-compatible, <code>/api/generate</code>) to catch names,
+          companies, addresses and confidential business details that patterns miss. Only
+          <code>localhost</code> endpoints are allowed. Sending waits for the model, up to the timeout.
+        </p>
+        <label class="toggle"><input type="checkbox" id="aiEnabled" /> Ask the local model before sending</label>
+        <div class="grid3">
+          <label class="lbl">Endpoint <input id="aiEndpoint" type="url" placeholder="http://localhost:11434" /></label>
+          <label class="lbl">Model <input id="aiModel" type="text" placeholder="llama3.2" /></label>
+          <label class="lbl"
+            >Timeout (ms) <input id="aiTimeout" type="number" min="1000" max="60000" step="500"
+          /></label>
+        </div>
+        <div class="inline">
+          <button id="aiTest" type="button">Test connection</button
+          ><span id="aiStatus" class="help" role="status"></span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Try the scanner</h2>
+        <p class="help">
+          Paste any text here to see what would be flagged with your current settings. This text is not saved.
+        </p>
+        <textarea
+          id="tryInput"
+          rows="6"
+          spellcheck="false"
+          placeholder="DB_PASSWORD=hunter2pass&#10;Authorization: Bearer abc123..."
+        ></textarea>
+        <div id="tryBlocks"></div>
+        <pre id="tryOutput" aria-live="polite"></pre>
+        <ul id="tryFindings" class="findings"></ul>
+      </section>
+
+      <div class="savebar">
+        <span id="saveStatus" role="status"></span>
+        <button id="reset" type="button">Restore defaults</button>
+        <button id="save" type="button" class="primary">Save settings</button>
+      </div>
+    </main>
+
+    <script src="src/settings.js"></script>
+    <script src="src/engine/validators.js"></script>
+    <script src="src/rules/pii.js"></script>
+    <script src="src/rules/credentials.js"></script>
+    <script src="src/rules/config.js"></script>
+    <script src="src/rules/env.js"></script>
+    <script src="src/rules/logs.js"></script>
+    <script src="src/rules/network.js"></script>
+    <script src="src/engine/classify.js"></script>
+    <script src="src/engine/tokens.js"></script>
+    <script src="src/engine/scan.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

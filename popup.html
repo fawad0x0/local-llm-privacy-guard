@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Guard</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="icons/icon-32.png" alt="" width="24" height="24" />
+        <div>
+          <h1>Privacy Guard</h1>
+          <p class="sub">Local-only scanning. Nothing leaves your device.</p>
+        </div>
+      </header>
+
+      <section class="site" id="site">
+        <div class="site-name" id="siteName">This tab</div>
+        <label class="toggle"><input id="siteEnabled" type="checkbox" /> Protect this site</label>
+        <p class="hint" id="siteHint"></p>
+      </section>
+
+      <label class="toggle"><input id="enabled" type="checkbox" /> Protection enabled</label>
+      <label class="toggle"><input id="reviewAll" type="checkbox" /> Review every prompt</label>
+      <label class="toggle"><input id="strictMode" type="checkbox" /> Strict mode</label>
+
+      <section class="stats" aria-label="This browser session">
+        <div><strong id="statItems">0</strong><span>items redacted</span></div>
+        <div><strong id="statReviews">0</strong><span>reviews</span></div>
+        <div><strong id="statOverrides">0</strong><span>sent anyway</span></div>
+      </section>
+
+      <div class="status" id="status" role="status">Settings are stored in this browser.</div>
+      <div class="row">
+        <button id="openOptions" type="button">All settings</button>
+      </div>
+      <p class="note">Detection is heuristic. It cannot guarantee that every secret or personal detail is caught.</p>
+    </main>
+    <script src="src/settings.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
